@@ -8,3 +8,15 @@ config HW_STACK_PROTECTION
 
 config BOARD_NRF9131EK
 	select USE_DT_CODE_PARTITION if BOARD_NRF9131EK_NRF9131_NS
+
+# Default to a minimal, bootloader-less TF-M so that generic Zephyr samples
+# fit and boot without extra overlays: the minimal profile keeps the secure
+# image small and BL2 is disabled to match the bootloader-less flash layout.
+# Select a different TF-M profile (e.g. via the nordic-tfm-full snippet) and
+# re-enable TFM_BL2 to build a full TF-M.
+choice TFM_PROFILE_TYPE
+	default TFM_PROFILE_TYPE_MINIMAL
+endchoice
+
+config TFM_BL2
+	default n

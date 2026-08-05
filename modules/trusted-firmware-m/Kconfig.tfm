@@ -107,6 +107,19 @@ config TFM_PROFILE_TYPE_AROTLESS
 config TFM_PROFILE_TYPE_LARGE
 	bool "TF-M build profile: large"
 
+config TFM_PROFILE_TYPE_MINIMAL
+	bool "TF-M build profile: minimal"
+	help
+	  Minimal TF-M build profile. Only the secure services required to
+	  switch the SoC to the non-secure state are included, keeping the
+	  secure image as small as possible and leaving the maximum amount of
+	  flash and SRAM for the non-secure application. This does not map to an
+	  upstream TF-M build profile; instead the individual TF-M partition and
+	  crypto Kconfig options are not made available and a small, curated set
+	  is enabled (see Kconfig.tfm.minimal.defconfig). To configure TF-M
+	  yourself, disable this profile and reproduce the desired configuration
+	  through Kconfig fragments.
+
 endchoice
 
 choice TFM_CMAKE_BUILD_TYPE
@@ -395,7 +408,7 @@ endif # TFM_BL2
 
 choice TFM_MODEL
 	prompt "TF-M Firmware Framework model"
-	default TFM_SFN if TFM_PROFILE_TYPE_SMALL
+	default TFM_SFN if TFM_PROFILE_TYPE_SMALL || TFM_PROFILE_TYPE_MINIMAL
 	default TFM_IPC
 	help
 	  The Firmware Framework M (FF-M) provides different programming models

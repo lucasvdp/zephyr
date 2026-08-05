@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2026 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Full TF-M layout without BL2 for nRF91.
+ *
+ * The default nRF91 layout is a minimal, bootloader-less TF-M with a small
+ * secure image. This sample builds a full TF-M without BL2, so the secure
+ * image runs from reset at 0x0 with the full 256 KB secure / 192 KB non-secure
+ * split expected by the TF-M "without BL2" flash layout (see the nordic_nrf
+ * nrf91 flash_layout.h in the TF-M repository). See also the companion
+ * nrf9160dk_nrf9160_ns.conf which selects the base TF-M profile.
+ */
+
+/delete-node/ &slot0_partition;
+/delete-node/ &storage_partition;
+/delete-node/ &sram0_ns;
+
+&flash0 {
+	partitions {
+		slot0_partition: partition@0 {
+			compatible = "zephyr,mapped-partition";
+			label = "image-0-secure";
+			reg = <0x00000000 0x40000>;
+		};
+
+		slot0_ns_partition: partition@40000 {
+			compatible = "zephyr,mapped-partition";
+			label = "image-0-nonsecure";
+			reg = <0x00040000 0x30000>;
+		};
+
+		tfm_ps_partition: partition@f0000 {
+			compatible = "zephyr,mapped-partition";
+			label = "tfm-ps";
+			reg = <0x000f0000 0x00004000>;
+		};
+
+		tfm_its_partition: partition@f4000 {
+			compatible = "zephyr,mapped-partition";
+			label = "tfm-its";
+			reg = <0x000f4000 0x00002000>;
+		};
+
+		tfm_otp_partition: partition@f6000 {
+			compatible = "zephyr,mapped-partition";
+			label = "tfm-otp";
+			reg = <0x000f6000 0x00002000>;
+		};
+
+		storage_partition: partition@f8000 {
+			compatible = "zephyr,mapped-partition";
+			label = "storage";
+			reg = <0x000f8000 0x00008000>;
+		};
+	};
+};
+
+&sram0_s {
+	/* Secure image memory (88 KB). */
+	reg = <0x0 0x16000>;
+};
+
+&sram0 {
+	sram0_ns: sram@16000 {
+		/* Non-Secure image memory (168 KB). */
+		reg = <0x16000 0x2a000>;
+	};
+};
+
+/ {
+	nordic-tz-secure {
+		code-partitions = <&slot0_partition>;
+		data-partitions = <&tfm_ps_partition>,
+				  <&tfm_its_partition>,
+				  <&tfm_otp_partition>;
+	};
+
+	nordic-tz-nonsecure {
+		code-partitions = <&slot0_ns_partition>;
+		data-partitions = <&storage_partition>;
+	};
+};

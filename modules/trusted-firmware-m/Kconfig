@@ -7,7 +7,18 @@
 rsource "Kconfig.tfm"
 
 if BUILD_WITH_TFM
+
+# The minimal profile keeps the secure image as small as possible by not
+# exposing the individual partition and crypto options at all; a small curated
+# set is enabled through Kconfig.tfm.minimal.defconfig instead.
+if !TFM_PROFILE_TYPE_MINIMAL
 rsource "Kconfig.tfm.partitions"
 rsource "Kconfig.tfm.crypto"
 rsource "Kconfig.tfm.ps"
+endif
+
+if TFM_PROFILE_TYPE_MINIMAL
+rsource "Kconfig.tfm.minimal.defconfig"
+endif
+
 endif

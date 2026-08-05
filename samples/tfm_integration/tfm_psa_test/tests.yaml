@@ -2,6 +2,9 @@ common:
   tags:
     - trusted-firmware-m
     - mcuboot
+  extra_args:
+    - platform:nrf9160dk/nrf9160/ns:SNIPPET="nordic-tfm-full"
+    - platform:nrf9161dk/nrf9161/ns:SNIPPET="nordic-tfm-full"
   platform_allow:
     - mps2/an521/cpu0/ns
     - nrf5340dk/nrf5340/cpuapp/ns

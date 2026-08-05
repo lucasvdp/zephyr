@@ -27,6 +27,18 @@ config SPI_NOR_FLASH_LAYOUT_PAGE_SIZE
 
 endif # SPI_NOR && BOARD_REVISION = "0.14.0"
 
+# Default to a minimal, bootloader-less TF-M so that generic Zephyr samples
+# fit and boot without extra overlays: the minimal profile keeps the secure
+# image small and BL2 is disabled to match the bootloader-less flash layout.
+# Select a different TF-M profile (e.g. via the nordic-tfm-full snippet) and
+# re-enable TFM_BL2 to build a full TF-M.
+choice TFM_PROFILE_TYPE
+	default TFM_PROFILE_TYPE_MINIMAL
+endchoice
+
+config TFM_BL2
+	default n
+
 endif # BOARD_NRF9160DK_NRF9160 || BOARD_NRF9160DK_NRF9160_NS
 
 if BOARD_NRF9160DK_NRF52840

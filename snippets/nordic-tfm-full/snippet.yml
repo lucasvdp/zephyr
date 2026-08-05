@@ -1,0 +1,18 @@
+name: nordic-tfm-full
+description: |
+  Builds a full Trusted Firmware-M (TF-M) on Nordic nRF91 devices.
+
+  nRF91 boards default to the minimal, bootloader-less TF-M profile so that
+  generic Zephyr samples fit and boot without extra overlays. This snippet
+  restores the classic full TF-M configuration: it selects the base TF-M
+  profile (re-enabling all secure services), re-enables BL2, and applies the
+  matching nRF91 flash/SRAM layout with a 256 KB secure image, two update
+  slots and the PS/ITS/OTP data partitions. Use it for samples that need a
+  full secure processing environment, such as samples/tfm_integration/*.
+append:
+  EXTRA_CONF_FILE: nordic-tfm-full.conf
+
+boards:
+  /.*\/nrf91\d\d\/ns/:
+    append:
+      EXTRA_DTC_OVERLAY_FILE: boards/nrf91.overlay

@@ -1,0 +1,28 @@
+# Curated TF-M configuration for the minimal build profile.
+#
+# When TFM_PROFILE_TYPE_MINIMAL is selected the full partition, crypto and
+# protected-storage Kconfig files are not sourced, so those services do not
+# exist and default to disabled. This keeps the secure image as small as
+# possible: only the framework needed to switch the SoC to the non-secure
+# state is built, with no secure partitions.
+#
+# Only the platform partition is enabled: it has no dependencies on other
+# secure partitions and provides basic platform services (such as system
+# reset) to the non-secure application. The crypto, protected-storage and
+# internal-trusted-storage partitions are intentionally left off: in upstream
+# TF-M the crypto partition depends on the Internal Trusted Storage partition,
+# so a partial set (e.g. crypto without ITS) does not build. Applications that
+# need those secure services should disable the minimal profile and configure
+# TF-M explicitly.
+#
+# Copyright (c) 2026 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: Apache-2.0
+
+config TFM_MCUBOOT_IMAGE_NUMBER
+	int
+	default 1
+
+config TFM_PARTITION_PLATFORM
+	bool
+	default y

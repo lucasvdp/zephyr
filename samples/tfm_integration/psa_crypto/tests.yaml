@@ -7,6 +7,8 @@ tests:
   sample.psa_crypto:
     # Sample disabled due to TF-M downloading qcbor which is not apache licensed
     skip: true
+    extra_args:
+      - platform:nrf9160dk/nrf9160/ns:SNIPPET="nordic-tfm-full"
     tags:
       - introduction
       - trusted-firmware-m

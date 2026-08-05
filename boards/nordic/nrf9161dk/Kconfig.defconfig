@@ -20,4 +20,16 @@ config BT_WAIT_NOP
 config I2C
 	default $(dt_compat_on_bus,$(DT_COMPAT_NXP_PCAL6408A),i2c)
 
+# Default to a minimal, bootloader-less TF-M so that generic Zephyr samples
+# fit and boot without extra overlays: the minimal profile keeps the secure
+# image small and BL2 is disabled to match the bootloader-less flash layout.
+# Select a different TF-M profile (e.g. via the nordic-tfm-full snippet) and
+# re-enable TFM_BL2 to build a full TF-M.
+choice TFM_PROFILE_TYPE
+	default TFM_PROFILE_TYPE_MINIMAL
+endchoice
+
+config TFM_BL2
+	default n
+
 endif # BOARD_NRF9161DK_NRF9161 || BOARD_NRF9161DK_NRF9161_NS
